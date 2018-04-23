@@ -1,0 +1,25 @@
+{
+	"CFG_VERSION": "1.0.0",
+
+	"MAX_SGN_GROUP": "1",
+	"MAX_SGN_INDEX": "3",
+	"MAX_PROG_GROUP": "1",
+	"MAX_PROG_INDEX": "1",
+
+	"ON_VALUE": "1",
+	"OFF_VALUE": "0",
+	"HEARTBEAT_VALUE": "heartbeat",
+
+	"LED_PATH": "/sys/class/leds/",
+	"BRIGHTNESS": "brightness",
+	"TRIGGER": "trigger",
+
+	"SGN_PATH": [
+			["uc5100:SGN1/",
+			 "uc5100:SGN2/",
+			 "uc5100:SGN3/"]
+	],
+	"PROG_PATH": [
+			["uc5100:SYS/"]
+	]
+}

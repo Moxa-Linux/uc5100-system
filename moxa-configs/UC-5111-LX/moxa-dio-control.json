@@ -1,0 +1,7 @@
+{
+	"METHOD": "gpio",
+	"MAX_DIN_PORT": 4,
+	"MAX_DOUT_PORT": 4,
+	"DIN_PIN": [86,87,88,89],
+	"DOUT_PIN": [54,55,56,57]
+}

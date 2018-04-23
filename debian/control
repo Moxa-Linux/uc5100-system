@@ -1,0 +1,55 @@
+Source: uc5100-system
+Section: admin
+Priority: required
+Maintainer: Elvis Yao <ElvisCW.Yao@moxa.com>
+Build-Depends: debhelper (>= 10)
+Standards-Version: 4.1.2
+Homepage: http://www.moxa.com/
+
+Package: uc5100-base-system
+Architecture: any
+Depends: ${misc:Depends}, 
+          moxa-led-control, 
+          moxa-push-button, 
+          moxa-uart-control,
+          u-boot-tools
+Description: Base system for UC-5100
+ It contains the necessary tools for setting up UC-5100
+
+Package: uc5100-kernel
+Architecture: any
+Depends: ${misc:Depends},
+Description: UC-5100 Flattened Image
+ Flattened image contains kernel image and device tree. It includes not only
+ realtime but also standard linux image and its device tree
+
+Package: uc5100-device-tree
+Architecture: any
+Depends: ${misc:Depends},
+Description: UC-5100 device tree blob files
+ It contains UC-5100 device tree blob files
+
+Package: uc5100-modules-std
+Architecture: any
+Depends: ${misc:Depends},
+Description: UC-5100 standard kernel modules
+ The Linux standard kernel modules for use on UC-5100
+
+Package: uc5100-modules-rt
+Architecture: any
+Depends: ${misc:Depends},
+Description: UC-2100 realtime kernel modules
+ The Linux realtime kernel modules for use on UC-5100
+
+Package: uc5100-configs
+Architecture: any
+Depends: ${misc:Depends},
+Description: UC-5100 platform configuration file
+ The platform-related configuration items are recoreded in this file,
+ these items will be referred to other platform packages
+
+Package: uc5100-sparklan-firmware
+Architecture: any
+Depends: ${misc:Depends},
+Description: Sparklan 160 ACN WiFi module firmware on moxa UC-5100 series.
+

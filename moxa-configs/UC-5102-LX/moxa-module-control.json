@@ -1,0 +1,14 @@
+{
+	"ENABLE_MODE":"1",
+	"CONFIG_VERSION":"1.0.0",
+	"NUM_OF_MODULE_SLOT":1,
+	"NUM_OF_SIM_SLOT":2,
+	"POWER_PIN":[481],
+	"POWER_ACT":"1",
+	"RESET_PIN":[482],
+	"SIM_SLOT_PIN":[480],
+	"SLOT_NAME":[1],
+	"PRODUCT_PATH":[
+		"/sys/devices/platform/ocp/47400000.usb/47401400.usb/musb-hdrc.0.auto/usb1/1-1/idProduct"
+	]
+}

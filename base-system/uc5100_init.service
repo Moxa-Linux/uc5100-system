@@ -1,0 +1,11 @@
+[Unit]
+Description=Moxa UC5100 series initial setting
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/uc5100_platform_init start
+ExecStop=/sbin/uc5100_platform_init stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target poweroff.target

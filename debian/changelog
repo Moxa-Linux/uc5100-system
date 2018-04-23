@@ -1,0 +1,18 @@
+uc5100-system (1.0.2+deb9) stretch; urgency=low
+
+  * FWR release V1.0_Build_18031319
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 27 Mar 2018 15:19:59 +0800
+
+uc5100-system (1.0.1+deb9) stretch; urgency=low
+
+  * Remove remove moxa-automountd daemon
+  * c_can driver as build-in, remove modprobe.
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Fri, 09 Mar 2018 11:10:48 +0800
+
+uc5100-system (1.0.0+deb9) stretch; urgency=low
+
+  * Initial Release.
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 26 Dec 2017 14:09:49 +0800
