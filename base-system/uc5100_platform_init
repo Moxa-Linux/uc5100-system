@@ -73,23 +73,10 @@ init_model_gpio () {
 	init_gpio "480" "out" "1"
 }
 
-power_on_module () {
-	echo 1 > /sys/class/gpio/gpio481/value
-}
-
-power_off_module () {
-	echo 0 > /sys/class/gpio/gpio481/value
-}
-
-power_on_ready_led () {
-	sleep 2
-	echo 1 > /sys/class/leds/uc5100:SYS/brightness
-}
-
 set_configs() {
 	local model_name=${1}
 
-	cp /etc/moxa-configs/${model_name}/* /etc/moxa-configs/
+	ln -sf /etc/moxa-configs/${model_name}/* /etc/moxa-configs/
 
 	systemctl disable moxa-cellular-signald.service
 	systemctl disable moxa-cellular-utils.service
@@ -99,15 +86,6 @@ set_configs() {
 	cp -a /lib/systemd/system/systemd-udevd.service /etc/systemd/system/
 	sed -i 's/MountFlags=slave/MountFlags=shared/' /etc/systemd/system/systemd-udevd.service
 
-	# fastboot setting
-	#fw_setenv fastboot 1
-	#systemctl disable networking.service
-	#systemctl disable ssh.service
-	#systemctl disable rsyslog.service
-	#systemctl disable ntp.service
-	systemctl daemon-reload
-
-	depmod "4.4.0-cip-rt-uc5100+"
 	depmod "4.4.0-cip-uc5100+"
 
 	# add wheel group for wifi_mgmt
@@ -134,10 +112,8 @@ init_uart_mode() {
 	local num_of_node=${1}
 	local i=""
 
-	modprobe ftdi_sio
 	for ((i=0; i<${num_of_node}; i++))
 	do
-		ln -sf /dev/ttyUSB${i} /dev/ttyM${i}
 		mx-uart-ctl -f /dev/ttyM${i} -m 0
 	done
 }
@@ -161,10 +137,6 @@ initial_can () {
 	ip link set can1 up type can bitrate 125000 triple-sampling on
 }
 
-exec_mx-pbtn () {
-	/sbin/mx-pbtn >/dev/null 2>&1 &
-}
-
 uc5100_initial() {
 	local model_name=$(kversion | awk '{print $1}')	
 
@@ -179,16 +151,16 @@ uc5100_initial() {
 		UC-5101-LX)
 			;;
 		UC-5102-LX)
-			initial_wifi &
-			initial_cellular &
+			initial_wifi
+			initial_cellular
 			;;
 		UC-5111-LX)
-			initial_can &
+			initial_can
 			;;
 		UC-5112-LX)
-			initial_can &
-			initial_wifi &
-			initial_cellular &
+			initial_can
+			initial_wifi
+			initial_cellular
 			;;
 		*)
 			echo "unknown model name."
@@ -196,16 +168,9 @@ uc5100_initial() {
 	esac
 
 	# general initial
-	exec_mx-pbtn &
 	init_model_gpio
 	init_uart_mode 4
-	power_on_ready_led &
-	#systemctl start networking.service &
-	#systemctl start ssh.service &
-}
-
-stop_mx-pbtn() {
-	killall -9 mx-pbtn >/dev/null 2>&1
+	mx-led-ctl -p 1 -i 1 on
 }
 
 umount_rfs() {
@@ -241,9 +206,6 @@ uc5100_stop() {
 	esac
 
 	# general stop	
-	stop_mx-pbtn
-	#systemctl disable networking.service
-	#systemctl disable ssh.service
 	umount_rfs
 }
 
