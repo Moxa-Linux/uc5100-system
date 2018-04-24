@@ -1,6 +1,5 @@
 base-system/kversion/kversion /bin
 base-system/chk_fs /sbin
-base-system/eltt2 /sbin
 base-system/expand2fs /sbin
 base-system/uc5100_platform_init /sbin
 base-system/09-watchdog.rules /etc/udev/rules.d
@@ -9,6 +8,5 @@ base-system/11-usb-auto-mount.rules /etc/udev/rules.d
 base-system/uc5100_init.service /etc/systemd/system/multi-user.target.wants
 base-system/blacklist.conf /etc/modprobe.d
 base-system/watchdog.conf /etc/modprobe.d
-base-system/rc.local.service /etc/systemd/system/multi-user.target.wants
-base-system/rc.local /etc/
 base-system/fw_env.config /etc
+base-system/10-serial.rules /etc/udev/rules.d
