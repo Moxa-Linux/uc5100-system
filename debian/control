@@ -8,11 +8,7 @@ Homepage: http://www.moxa.com/
 
 Package: uc5100-base-system
 Architecture: any
-Depends: ${misc:Depends}, 
-          moxa-led-control, 
-          moxa-push-button, 
-          moxa-uart-control,
-          u-boot-tools
+Depends: ${misc:Depends}, moxa-led-control, moxa-push-button, moxa-uart-control, u-boot-tools, uc5100-kernel, uc5100-modules-std, uc5100-moxa-configs, uc5100-sparklan-firmware, moxa-module-control, moxa-firmware-tools, moxa-cellular-utils, moxa-wifi-utils, moxa-nport-real-tty-utils, tpm2-tools, moxa-cellular-signald, moxa-wifi-signald, moxa-rclocal, moxa-dio-control
 Description: Base system for UC-5100
  It contains the necessary tools for setting up UC-5100
 
