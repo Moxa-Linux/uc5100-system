@@ -19,25 +19,13 @@ Description: UC-5100 Flattened Image
  Flattened image contains kernel image and device tree. It includes not only
  realtime but also standard linux image and its device tree
 
-Package: uc5100-device-tree
-Architecture: any
-Depends: ${misc:Depends},
-Description: UC-5100 device tree blob files
- It contains UC-5100 device tree blob files
-
 Package: uc5100-modules-std
 Architecture: any
 Depends: ${misc:Depends},
 Description: UC-5100 standard kernel modules
  The Linux standard kernel modules for use on UC-5100
 
-Package: uc5100-modules-rt
-Architecture: any
-Depends: ${misc:Depends},
-Description: UC-2100 realtime kernel modules
- The Linux realtime kernel modules for use on UC-5100
-
-Package: uc5100-configs
+Package: uc5100-moxa-configs
 Architecture: any
 Depends: ${misc:Depends},
 Description: UC-5100 platform configuration file
