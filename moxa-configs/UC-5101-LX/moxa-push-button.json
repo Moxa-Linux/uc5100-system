@@ -1,55 +1,87 @@
 {
-"CONFIG_VERSION":"1.0.0",
-"BUTTON1":{
-	"ACTION":[
-		{
-			"INTERVAL": "7",
-			"LED_GROUP": "1",
-			"LED_IDX": "1",
-			"LED_STATE": "blink",
-			"DEBUG_MSG": "Detect Button is pressed. Blink YELLOW",
-			"EXEC_CMD": "",
-			"RELEASE":{
-				"INTERVAL": "0",
-				"LED_GROUP": "1",
-				"LED_IDX": "1",
-				"LED_STATE": "off",
-				"DEBUG_MSG": "Detect Button is released in 7s, do nothing",
-				"EXEC_CMD": ""
-			}
-		},
-		{
-			"INTERVAL": "2",
-			"LED_GROUP": "1",
-			"LED_IDX": "1",
-			"LED_STATE": "on",
-			"DEBUG_MSG": "Detect Button has already been pressed over 7s",
-			"EXEC_CMD": "",
-			"RELEASE":{
-				"INTERVAL": "0",
-				"LED_GROUP": "1",
-				"LED_IDX": "all",
-				"LED_STATE": "off",
-				"DEBUG_MSG": "Button is released in 7~9s, Reset to Default",
-				"EXEC_CMD": "mx-set-def"
-			}
-		},
-		{
-			"INTERVAL": "1",
-			"LED_GROUP": "1",
-			"LED_IDX": "1",
-			"LED_STATE": "off",
-			"DEBUG_MSG": "Detect Button has already been pressed over 9s, do nothing",
-			"EXEC_CMD": "",
-			"RELEASE":{
-				"INTERVAL": "0",
-				"LED_GROUP": "1",
-				"LED_IDX": "all",
-				"LED_STATE": "off",
-				"DEBUG_MSG": "Detect Button has already been pressed over 9s, do nothing",
-				"EXEC_CMD": "mx-set-def"
-			}
-		}
-	]
+        "CONFIG_VERSION":"1.1.0",
+
+        "NUM_OF_ALL_BUTTONS": 1,
+
+        "BUTTON_TYPES": [
+                {
+                        "TYPE": "SYSTEM",
+                        "NUM_OF_BUTTONS": 1,
+                        "PATHS": [
+                                "/dev/input/event0"
+                        ]
+                },
+                {
+                        "TYPE": "USER",
+                        "NUM_OF_BUTTONS": 0,
+                        "PATHS": []
+                }
+        ],
+
+        "DEFAULT_ACTIONS": [
+                {
+                        "PRESS_ACTION": [
+                                {
+                                        "LED_GROUP": 1,
+                                        "LED_INDEX": 1,
+                                        "LED_STATE": "blink",
+                                        "MESSAGE": "Button Pressed",
+                                        "EXEC_CMD": ""
+                                }
+                        ],
+			"RELEASE_ACTION": [
+                                {
+                                        "SEC": 9,
+                                        "LED_GROUP": 1,
+                                        "LED_INDEX": 1,
+                                        "LED_STATE": "on",
+                                        "MESSAGE": "Release Button over 9s - Do nothing",
+                                        "EXEC_CMD": ""
+                                },
+                                {
+                                        "SEC": 7,
+                                        "LED_GROUP": 1,
+                                        "LED_INDEX": 1,
+                                        "LED_STATE": "off",
+                                        "MESSAGE": "Release Button in 7~9s - ENTER reset to default",
+                                        "EXEC_CMD": "/sbin/mx-set-def"
+                                },
+                                {
+                                        "SEC": 0,
+                                        "LED_GROUP": 1,
+                                        "LED_INDEX": 1,
+                                        "LED_STATE": "off",
+                                        "MESSAGE": "Release Button in 0~7s - Do nothing",
+                                        "EXEC_CMD": ""
+                                }
+                        ],
+			"HOLD_ACTION": [
+                                {
+                                        "SEC": 9,
+                                        "LED_GROUP": 1,
+                                        "LED_INDEX": 1,
+                                        "LED_STATE": "off",
+                                        "MESSAGE": "Push Button over 9s",
+                                        "EXEC_CMD": ""
+                                },
+                                {
+                                        "SEC": 7,
+                                        "LED_GROUP": 1,
+                                        "LED_INDEX": 1,
+                                        "LED_STATE": "on",
+                                        "MESSAGE": "Push Button over 7s",
+                                        "EXEC_CMD": ""
+                                },
+                                {
+                                        "SEC": 0,
+                                        "LED_GROUP": 1,
+                                        "LED_INDEX": 1,
+                                        "LED_STATE": "blink",
+                                        "MESSAGE": "Push Button over 0s",
+                                        "EXEC_CMD": ""
+                                }
+                        ]
+                }
+        ]
 }
-}
+
