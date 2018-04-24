@@ -21,6 +21,11 @@ set -e
 case "$1" in
     configure)
 	TMP_FS=/var/tmp/p1
+	ITB=${TMP_FS}/itb/am335x-moxa-uc-5100.itb
+
+	if [ -f ${ITB} ]; then
+                mv ${ITB} ${TMP_FS}/am335x-moxa-uc-5100.itb
+        fi
 
 	# Check the environment is in VM or physical target machine.
 	if cat /proc/cmdline | grep mmcblk > /dev/null; then
