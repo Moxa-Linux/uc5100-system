@@ -8,7 +8,7 @@
                         "NUM_OF_LEDS_PER_GROUP": 3,
                         "PATHS": [
                                 ["UC5100:YELLOW:SGN1/",
-                                 "UC5100:YELLOW:SIG2/",
+                                 "UC5100:YELLOW:SGN2/",
                                  "UC5100:YELLOW:SGN3/"]
                         ]
                 },
