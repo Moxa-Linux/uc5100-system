@@ -1,3 +1,9 @@
+uc5100-system (1.1.1) stretch; urgency=medium
+
+  * fix: set kversion file permission 
+
+ -- Wes Huang <Wes.Huang@moxa.com>  Mon, 02 Jul 2018 15:49:35 +0800
+
 uc5100-system (1.1.0) stretch; urgency=medium
 
   * feat: support T models 
