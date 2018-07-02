@@ -1,3 +1,9 @@
+uc5100-system (1.1.0) stretch; urgency=medium
+
+  * feat: support T models 
+
+ -- Wes Huang <Wes.Huang@moxa.com>  Mon, 02 Jul 2018 11:00:24 +0800
+
 uc5100-system (1.0.2+deb9) stretch; urgency=low
 
   * FWR release V1.0_Build_18031319
