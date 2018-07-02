@@ -76,6 +76,21 @@ init_model_gpio () {
 set_configs() {
 	local model_name=${1}
 
+	case ${model_name} in
+		UC-5101-LX|UC-5101-T-LX)
+			model_name="UC-5101-LX"
+			;;
+		UC-5102-LX|UC-5102-T-LX)
+			model_name="UC-5102-LX"
+			;;
+		UC-5111-LX|UC-5111-T-LX)
+			model_name="UC-5111-LX"
+			;;
+		UC-5112-LX|UC-5112-T-LX)
+			model_name="UC-5112-LX"
+			;;
+	esac
+
 	ln -sf /etc/moxa-configs/${model_name}/* /etc/moxa-configs/
 
 	systemctl disable moxa-cellular-signald.service
@@ -148,16 +163,16 @@ uc5100_initial() {
 
 	# initial by model
 	case ${model_name} in
-		UC-5101-LX)
+		UC-5101-LX|UC-5101-T-LX)
 			;;
-		UC-5102-LX)
+		UC-5102-LX|UC-5102-T-LX)
 			initial_wifi
 			initial_cellular
 			;;
-		UC-5111-LX)
+		UC-5111-LX|UC-5111-T-LX)
 			initial_can
 			;;
-		UC-5112-LX)
+		UC-5112-LX|UC-5112-T-LX)
 			initial_can
 			initial_wifi
 			initial_cellular
@@ -190,12 +205,10 @@ umount_rfs() {
 uc5100_stop() {
 	local model_name=$(kversion | awk '{print $1}')	
 
-	# stop by model
 	case ${model_name} in
-		UC-5101-LX|UC-5111-LX)
-			echo "Do nothing"
+		UC-5101-LX|UC-5101-T-LX|UC-5111-LX|UC-5111-T-LX)
 			;;
-		UC-5112-LX|UC-5102-LX)
+		UC-5102-LX|UC-5102-T-LX|UC-5112-LX|UC-5112-T-LX)
 			wifi_mgmt stop
 			cell_mgmt stop
 			mx-mod-ctl -p off 1
