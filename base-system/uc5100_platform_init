@@ -129,7 +129,7 @@ init_uart_mode() {
 
 	for ((i=0; i<${num_of_node}; i++))
 	do
-		mx-uart-ctl -f /dev/ttyM${i} -m 0
+		mx-uart-ctl -p ${i} -m 0
 	done
 }
 
