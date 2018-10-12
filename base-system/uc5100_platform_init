@@ -202,16 +202,24 @@ umount_rfs() {
 	umount -f -l /overlayfs
 }
 
+stop_wireless() {
+	cell_mgmt stop
+	wifi_mgmt stop
+	if lsmod | grep "^wlan" -q; then
+		rmmod wlan
+	fi
+	mx-mod-ctl -p off 1
+}
+
 uc5100_stop() {
 	local model_name=$(kversion | awk '{print $1}')	
 
 	case ${model_name} in
 		UC-5101-LX|UC-5101-T-LX|UC-5111-LX|UC-5111-T-LX)
+			echo "Do nothing"
 			;;
 		UC-5102-LX|UC-5102-T-LX|UC-5112-LX|UC-5112-T-LX)
-			wifi_mgmt stop
-			cell_mgmt stop
-			mx-mod-ctl -p off 1
+			stop_wireless
 			;;
 		*)
 			echo "unknown model name."
