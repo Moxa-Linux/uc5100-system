@@ -1,3 +1,10 @@
+uc5100-system (1.1.2) stretch; urgency=medium
+
+  * fix: adjust mx-uart-ctl parameters
+  * fix: unload the wlan driver before power off the mPCIe slot, if the WPEQ-160ACN WiFi driver is loaded. 
+
+ -- Wes Huang <Wes.Huang@moxa.com>  Fri, 12 Oct 2018 14:52:18 +0800
+
 uc5100-system (1.1.1) stretch; urgency=medium
 
   * fix: set kversion file permission 
