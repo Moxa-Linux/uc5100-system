@@ -1,12 +1,10 @@
 #!/bin/bash
 #
-# Copyright (C) 2017 MOXA Inc. - https://www.moxa.com/
+# SPDX-License-Identifier: Apache-2.0
 #
-# Author: Elvis Yao <ElvisCW.Yao@moxa.com>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 2 as
-# published by the Free Software Foundation.
+# Authors:
+#       2018    Elvis Yao <ElvisCW.Yao@moxa.com>
+#       2018    Ken CJ Chou <KenCJ.Chou@moxa.com>
 #
 
 rfs_resize () {
@@ -16,8 +14,23 @@ rfs_resize () {
 	/sbin/reboot -d -f -i
 }
 
+init_gpio () {
+	local gpio=${1}
+	local direction=${2}
+	local value=${3}
+
+	if [ ! -e "/sys/class/gpio/gpio${gpio}" ]; then
+		echo ${gpio} > "/sys/class/gpio/export"
+		echo ${direction} > "/sys/class/gpio/gpio${gpio}/direction"
+	fi
+	if [ X"${direction}" == X"out" ]; then
+		echo ${value} > "/sys/class/gpio/gpio${gpio}/value"
+	fi
+}
+
 init_network_config() {
 	local num_of_eth="${1}"
+
 	echo "# interfaces(5) file used by ifup(8) and ifdown(8)"
 	echo "# Include files from /etc/network/interfaces.d:"
 	echo "source-directory /etc/network/interfaces.d"
@@ -27,7 +40,6 @@ init_network_config() {
 	do
 		echo -n " eth${i}"
 	done
-
 	echo " lo"
 	echo "iface lo inet loopback"
 
@@ -41,58 +53,29 @@ init_network_config() {
 	done
 }
 
-init_gpio () {
-	local gpio=${1}
-	local direction=${2}
-	local value=${3}
-
-	if [ ! -f "/sys/class/gpio/gpio${gpio}" ]; then
-		echo ${gpio} > "/sys/class/gpio/export"
-		echo ${direction} > "/sys/class/gpio/gpio${gpio}/direction"
-		if [ X"${direction}" == X"out" ]; then
-			echo ${value} > "/sys/class/gpio/gpio${gpio}/value"
-		fi
-	fi
-}
-
-init_model_gpio () {
-	# DI/DO
-	init_gpio "54" "out" "0"
-	init_gpio "55" "out" "0"
-	init_gpio "56" "out" "0"
-	init_gpio "57" "out" "0"
-	init_gpio "86" "in"
-	init_gpio "87" "in"
-	init_gpio "88" "in"
-	init_gpio "89" "in"
-
-	# init mPCIe (uboot default to power on)
-	# init_gpio "481" "out" "1"
-
-	# celluar sim pin
-	init_gpio "480" "out" "1"
-}
-
-set_configs() {
-	local model_name=${1}
+get_model_name() {
+	local model_name=$(kversion | awk '{print $1}')
 
 	case ${model_name} in
-		UC-5101-LX|UC-5101-T-LX)
-			model_name="UC-5101-LX"
-			;;
-		UC-5102-LX|UC-5102-T-LX)
-			model_name="UC-5102-LX"
-			;;
-		UC-5111-LX|UC-5111-T-LX)
-			model_name="UC-5111-LX"
-			;;
-		UC-5112-LX|UC-5112-T-LX)
-			model_name="UC-5112-LX"
-			;;
+	UC-5101-LX|UC-5101-T-LX)
+		model_name="UC-5101-LX"
+		;;
+	UC-5102-LX|UC-5102-T-LX)
+		model_name="UC-5102-LX"
+		;;
+	UC-5111-LX|UC-5111-T-LX)
+		model_name="UC-5111-LX"
+		;;
+	UC-5112-LX|UC-5112-T-LX)
+		model_name="UC-5112-LX"
+		;;
 	esac
 
-	ln -sf /etc/moxa-configs/configs/${model_name}/* /etc/moxa-configs/
-	ln -sf /etc/moxa-configs/udev/${model_name}/* /etc/udev/rules.d/
+	echo ${model_name}
+}
+
+one_time_setting() {
+	local model_name=${1}
 
 	systemctl disable moxa-cellular-signald.service
 	systemctl disable moxa-cellular-utils.service
@@ -102,26 +85,35 @@ set_configs() {
 	cp -a /lib/systemd/system/systemd-udevd.service /etc/systemd/system/
 	sed -i 's/MountFlags=slave/MountFlags=shared/' /etc/systemd/system/systemd-udevd.service
 
-	depmod "4.4.0-cip-uc5100+"
+	depmod -a
 
-	# add wheel group for wifi_mgmt
 	case ${model_name} in
-		UC-5112-LX|UC-5102-LX)
-			init_network_config 2 > /etc/network/interfaces
-			groupadd wheel
-			;;
-		UC-5111-LX|UC-5101-LX)
-			init_network_config 2 > /etc/network/interfaces
-			;;
-		*)
-			echo "unknown model name."
-			;;
+	UC-5112-LX|UC-5102-LX)
+		init_network_config 2 > /etc/network/interfaces
+		groupadd wheel
+		;;
 	esac
 
-	# increase vm minimum free size to avoid memory issue when copying lots of files.
+	init_network_config 2 > /etc/network/interfaces
+
+	# Enable bootloader to pass the fsck.repair parameter to kernel
+	fw_setenv robust 1
+
+	# fix kernel 4.4 swap memory issue.
 	if ! grep "vm.min_free_kbytes" /etc/sysctl.conf > /dev/null; then
-		echo "vm.min_free_kbytes=16384" >> /etc/sysctl.conf
-	fi
+                echo "vm.min_free_kbytes=16384" >> /etc/sysctl.conf
+        fi
+}
+
+initial_dio() {
+	init_gpio "54" "out" "0"
+	init_gpio "55" "out" "0"
+	init_gpio "56" "out" "0"
+	init_gpio "57" "out" "0"
+	init_gpio "86" "in"
+	init_gpio "87" "in"
+	init_gpio "88" "in"
+	init_gpio "89" "in"
 }
 
 init_uart_mode() {
@@ -141,6 +133,9 @@ initial_wifi () {
 }
 
 initial_cellular() {
+	# set first sim card slot by default
+	init_gpio "480" "out" "1"
+
 	if dmesg | grep -E "idProduct=68c0|idProduct=15c1|idProduct=005b" > /dev/null; then
 		systemctl start moxa-cellular-signald.service
 		systemctl start moxa-cellular-utils.service
@@ -148,83 +143,84 @@ initial_cellular() {
 }
 
 initial_can () {
-	#modprobe c_can_platform
-	ip link set can0 up type can bitrate 125000 triple-sampling on
-	ip link set can1 up type can bitrate 125000 triple-sampling on
+	ip link set can0 up type can bitrate 125000
+	ip link set can1 up type can bitrate 125000
 }
 
 uc5100_initial() {
-	local model_name=$(kversion | awk '{print $1}')	
+	local model_name=$(get_model_name)
+
+	ln -sf /etc/moxa-configs/${model_name}/configs/* /etc/moxa-configs/
+	ln -sf /etc/moxa-configs/${model_name}/udev/* /etc/udev/rules.d/
 
 	# only needs to initial one time
 	if [ -f /sbin/expand2fs ]; then	
-		set_configs ${model_name}
+		one_time_setting ${model_name}
 		rfs_resize
 	fi
 
 	# initial by model
 	case ${model_name} in
-		UC-5101-LX|UC-5101-T-LX)
-			;;
-		UC-5102-LX|UC-5102-T-LX)
-			initial_wifi
-			initial_cellular
-			;;
-		UC-5111-LX|UC-5111-T-LX)
-			initial_can
-			;;
-		UC-5112-LX|UC-5112-T-LX)
-			initial_can
-			initial_wifi
-			initial_cellular
-			;;
-		*)
-			echo "unknown model name."
-			;;
+	UC-5101-LX)
+		;;
+	UC-5102-LX)
+		initial_wifi
+		initial_cellular
+		;;
+	UC-5111-LX)
+		initial_can
+		;;
+	UC-5112-LX)
+		initial_can
+		initial_wifi
+		initial_cellular
+		;;
+	*)
+		echo "Error: Unknown model name" >&2
+		;;
 	esac
 
 	# general initial
-	init_model_gpio
+	initial_dio
 	init_uart_mode 4
+
+	# light up system ready led
 	mx-led-ctl -p 1 -i 1 on
 }
 
 umount_rfs() {
 	umount -f -l /tmp
-	umount -f -l /media
-	umount -f -l /home
-	umount -f -l /usr
-	umount -f -l /lib
-	umount -f -l /bin
-	umount -f -l /sbin
-	umount -f -l /etc
-	umount -f -l /var
-	umount -f -l /root
-	umount -f -l /overlayfs
-}
-
-stop_wireless() {
-	cell_mgmt stop
-	wifi_mgmt stop
-	if lsmod | grep "^wlan" -q; then
-		rmmod wlan
-	fi
-	mx-mod-ctl -p off 1
+        umount -f -l /home
+        umount -f -l /media
+        umount -f -l /mnt
+        umount -f -l /etc
+        umount -f -l /root
+        umount -f -l /opt
+        umount -f -l /usr
+        umount -f -l /bin
+        umount -f -l /sbin
+        umount -f -l /var
+        umount -f -l /lib
+        umount -f -l /overlayfs
 }
 
 uc5100_stop() {
-	local model_name=$(kversion | awk '{print $1}')	
+	local model_name=$(get_model_name)
 
 	case ${model_name} in
-		UC-5101-LX|UC-5101-T-LX|UC-5111-LX|UC-5111-T-LX)
-			echo "Do nothing"
-			;;
-		UC-5102-LX|UC-5102-T-LX|UC-5112-LX|UC-5112-T-LX)
-			stop_wireless
-			;;
-		*)
-			echo "unknown model name."
-			;;
+	UC-5101-LX|UC-5111-LX)
+		;;
+	UC-5102-LX|UC-5112-LX)
+		cell_mgmt stop
+		wifi_mgmt stop
+		if lsmod | grep "^wlan" -q; then
+			rmmod wlan
+		fi
+		mx-mod-ctl -p off 1
+		;;
+	*)
+		echo "Error: Unknown model name" >&2
+		;;
 	esac
 
 	# general stop	
@@ -232,19 +228,19 @@ uc5100_stop() {
 }
 
 case "$1" in
-    start)
+start)
 	uc5100_initial
-        ;;
-    restart|reload|force-reload)
-        echo "Error: argument '$1' not supported" >&2
-        exit 3
-        ;;
-    stop)
+	;;
+restart|reload|force-reload)
+	echo "Error: argument '$1' not supported" >&2
+	exit 3
+	;;
+stop)
 	uc5100_stop
-        ;;
-    *)
-        echo "Usage: $0 start|stop" >&2
-        exit 3
-        ;;
+	;;
+*)
+	echo "Usage: $0 start|stop" >&2
+	exit 3
+	;;
 esac
 
