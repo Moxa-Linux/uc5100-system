@@ -91,7 +91,8 @@ set_configs() {
 			;;
 	esac
 
-	ln -sf /etc/moxa-configs/${model_name}/* /etc/moxa-configs/
+	ln -sf /etc/moxa-configs/configs/${model_name}/* /etc/moxa-configs/
+	ln -sf /etc/moxa-configs/udev/${model_name}/* /etc/udev/rules.d/
 
 	systemctl disable moxa-cellular-signald.service
 	systemctl disable moxa-cellular-utils.service
