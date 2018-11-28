@@ -101,7 +101,7 @@ one_time_setting() {
 
 	# fix kernel 4.4 swap memory issue.
 	if ! grep "vm.min_free_kbytes" /etc/sysctl.conf > /dev/null; then
-                echo "vm.min_free_kbytes=16384" >> /etc/sysctl.conf
+                echo "vm.min_free_kbytes=65536" >> /etc/sysctl.conf
         fi
 }
 
