@@ -1,4 +1,4 @@
-KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.0", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM0"
-KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.1", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM1"
-KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.2", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM2"
-KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.3", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM3"
+KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.0", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM0", RUN+="/sbin/mx-uart-ctl -p 0 -m 0"
+KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.1", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM1", RUN+="/sbin/mx-uart-ctl -p 1 -m 0"
+KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.2", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM2", RUN+="/sbin/mx-uart-ctl -p 2 -m 0"
+KERNEL=="ttyUSB[0-9]*", KERNELS=="2-1.1:1.3", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM3", RUN+="/sbin/mx-uart-ctl -p 3 -m 0"
