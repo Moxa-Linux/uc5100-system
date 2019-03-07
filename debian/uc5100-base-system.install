@@ -1,4 +1,4 @@
-base-system/kversion/kversion /bin
+base-system/kversion /bin
 base-system/expand2fs /sbin
 base-system/uc5100_platform_init /sbin
 base-system/uc5100_init.service /etc/systemd/system/multi-user.target.wants
