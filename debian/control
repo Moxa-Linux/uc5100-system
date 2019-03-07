@@ -25,7 +25,6 @@ Depends: ${misc:Depends},
          moxa-cellular-signald,
          moxa-wifi-signald,
          moxa-nport-real-tty-utils,
-         moxa-rclocal,
          u-boot-tools,
          tpm2-tools
 Description: Base system for UC-5100

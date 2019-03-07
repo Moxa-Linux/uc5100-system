@@ -1,6 +1,6 @@
 [Unit]
 Description=Moxa UC5100 series initial setting
-Before=rc.local.service moxa-push-button.service
+Before=rc-local.service moxa-push-button.service
 
 [Service]
 Type=oneshot
