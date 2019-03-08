@@ -1,3 +1,26 @@
+uc5100-system (1.2.0) stretch; urgency=low
+
+  * Remove SD card, USB storage auto-mount feature
+  * Initialize UART ports mode by udev rules
+  * Initialize CAN interface by udev rules
+  * Remove kernel, kernel modules from system package
+  * Remove SparkLAN firmware and driver from system package
+  * Add new dependent package "moxa-version"
+  * Add TPM2 initialization in platform initial script
+  * Fix LED behavior when pressing button
+  * Update dependent packages
+    * moxa-led-control (>= 1.1.0)
+    * moxa-push-button (>= 1.1.2)
+    * moxa-uart-control (>= 1.1.3)
+    * moxa-dio-control (>= 1.1.1)
+    * moxa-firmware-tools (>= 1.1.1)
+    * moxa-cellular-utils (>= 1.52.9)
+    * moxa-cellular-signald (>= 1.52.9)
+    * moxa-wifi-utils (>= 1.6.5)
+    * moxa-wifi-signald (>= 1.6.5)
+
+ -- Ken CJ Chou <KenCJ.Chou@moxa.com>  Fri, 08 Mar 2019 16:27:19 +0800
+
 uc5100-system (1.1.2) stretch; urgency=medium
 
   * fix: adjust mx-uart-ctl parameters
