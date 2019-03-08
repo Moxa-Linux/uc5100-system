@@ -11,9 +11,9 @@ Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          uc5100-moxa-configs (= ${binary:Version}),
-         uc5100-sparklan-firmware (= ${binary:Version}),
          uc5100-kernel (>= 2.0.0),
          uc5100-modules-std (>= 2.0.0),
+         sparklan-qca9377-driver-4.4.0-cip-am335x (>= 2.0.0),
          moxa-version (>= 1.0.0),
          moxa-led-control,
          moxa-push-button,
@@ -37,9 +37,4 @@ Depends: ${misc:Depends}
 Description: UC-5100 platform configuration file
  The platform-related configuration items are recoreded in this file,
  these items will be referred to other platform packages
-
-Package: uc5100-sparklan-firmware
-Architecture: any
-Depends: ${misc:Depends}
-Description: Sparklan 160 ACN WiFi module firmware on moxa UC-5100 series.
 
