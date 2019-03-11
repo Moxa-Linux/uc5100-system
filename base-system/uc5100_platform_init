@@ -116,6 +116,19 @@ initial_dio() {
 	init_gpio "89" "in"
 }
 
+initial_tpm2() {
+        local tpm2=$(fw_printenv -n tpm2)
+
+        # check tpm2 is exist or not.
+        if [ X"${tpm2}" == X"1" ]; then
+		export TPM2TOOLS_TCTI_NAME=device
+		export TPM2TOOLS_DEVICE_FILE=/dev/tpmrm0
+
+		# load tpm2 drivers and service
+                modprobe tpm_tis_spi
+        fi
+}
+
 initial_wifi () {
 	if dmesg | grep "idProduct=9378" > /dev/null; then
 		systemctl start moxa-wifi-signald.service	
@@ -169,6 +182,7 @@ uc5100_initial() {
 
 	# general initial
 	initial_dio
+	initial_tpm2
 
 	# light up system ready led
 	mx-led-ctl -p 1 -i 1 on
