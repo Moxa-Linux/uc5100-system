@@ -54,32 +54,34 @@ init_network_config() {
 }
 
 get_model_name() {
-	local model_name=$(kversion | awk '{print $1}')
+	local model_name="$(mx-ver -m)"
 
 	case ${model_name} in
 	UC-5101-LX|UC-5101-T-LX)
-		model_name="UC-5101-LX"
+		echo "UC-5101-LX"
 		;;
 	UC-5102-LX|UC-5102-T-LX)
-		model_name="UC-5102-LX"
+		echo "UC-5102-LX"
 		;;
 	UC-5111-LX|UC-5111-T-LX)
-		model_name="UC-5111-LX"
+		echo "UC-5111-LX"
 		;;
 	UC-5112-LX|UC-5112-T-LX)
-		model_name="UC-5112-LX"
+		echo "UC-5112-LX"
 		;;
 	esac
-
-	echo ${model_name}
 }
 
 one_time_setting() {
 	local model_name=${1}
 
-	systemctl disable moxa-cellular-signald.service
-	systemctl disable moxa-cellular-utils.service
-	systemctl disable moxa-wifi-signald.service
+	case ${model_name} in
+	UC-5111-LX|UC-5101-LX)
+		systemctl disable moxa-cellular-signald.service
+		systemctl disable moxa-cellular-utils.service
+		systemctl disable moxa-wifi-signald.service
+		;;
+	esac
 
 	# fix the issue that mount storage fuse-related filesystem via udev might be failed
 	cp -a /lib/systemd/system/systemd-udevd.service /etc/systemd/system/
@@ -87,17 +89,10 @@ one_time_setting() {
 
 	depmod -a
 
-	case ${model_name} in
-	UC-5112-LX|UC-5102-LX)
-		init_network_config 2 > /etc/network/interfaces
-		groupadd wheel
-		;;
-	esac
-
-	init_network_config 2 > /etc/network/interfaces
-
 	# Enable bootloader to pass the fsck.repair parameter to kernel
 	fw_setenv robust 1
+
+	init_network_config 2 > /etc/network/interfaces
 
 	# fix kernel 4.4 swap memory issue.
 	if ! grep "vm.min_free_kbytes" /etc/sysctl.conf > /dev/null; then
@@ -129,12 +124,6 @@ initial_tpm2() {
         fi
 }
 
-initial_wifi () {
-	if dmesg | grep "idProduct=9378" > /dev/null; then
-		systemctl start moxa-wifi-signald.service	
-	fi
-}
-
 initial_cellular() {
 	if dmesg | grep -E "idProduct=68c0|idProduct=15c1|idProduct=005b" > /dev/null; then
 		systemctl start moxa-cellular-signald.service
@@ -164,7 +153,6 @@ uc5100_initial() {
 	UC-5101-LX)
 		;;
 	UC-5102-LX)
-		initial_wifi
 		initial_cellular
 		;;
 	UC-5111-LX)
@@ -172,7 +160,6 @@ uc5100_initial() {
 		;;
 	UC-5112-LX)
 		initial_can
-		initial_wifi
 		initial_cellular
 		;;
 	*)
@@ -216,7 +203,7 @@ uc5100_stop() {
 		if lsmod | grep "^wlan" -q; then
 			rmmod wlan
 		fi
-		mx-mod-ctl -p off 1
+		mx-module-ctl -s 1 -p off
 		;;
 	*)
 		echo "Error: Unknown model name" >&2
