@@ -123,9 +123,6 @@ initial_wifi () {
 }
 
 initial_cellular() {
-	# set first sim card slot by default
-	init_gpio "480" "out" "1"
-
 	if dmesg | grep -E "idProduct=68c0|idProduct=15c1|idProduct=005b" > /dev/null; then
 		systemctl start moxa-cellular-signald.service
 		systemctl start moxa-cellular-utils.service
