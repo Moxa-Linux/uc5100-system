@@ -50,7 +50,7 @@
                                         "SEC": 0,
                                         "LED_GROUP": 1,
                                         "LED_INDEX": 1,
-                                        "LED_STATE": "off",
+                                        "LED_STATE": "on",
                                         "MESSAGE": "Release Button in 0~7s - Do nothing",
                                         "EXEC_CMD": ""
                                 }
