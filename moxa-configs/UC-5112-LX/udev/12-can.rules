@@ -1,0 +1,2 @@
+DEVPATH=="/devices/platform/ocp/481cc000.can/net/can0", ACTION=="add", RUN+="/sbin/ip link set can0 up type can bitrate 125000"
+DEVPATH=="/devices/platform/ocp/481d0000.can/net/can1", ACTION=="add", RUN+="/sbin/ip link set can1 up type can bitrate 125000"
