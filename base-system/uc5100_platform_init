@@ -54,7 +54,7 @@ init_network_config() {
 }
 
 get_model_name() {
-	local model_name="$(mx-ver -m)"
+	local model_name="$(mx-ver -m | awk '{print $1}')"
 
 	case ${model_name} in
 	UC-5101-LX|UC-5101-T-LX)
