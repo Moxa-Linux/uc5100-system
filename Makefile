@@ -7,6 +7,8 @@
 
 # source code name
 MOXA_VERSION_CFG=moxa-configs/moxa-version.conf
+PKG_FW_VERSION ?= 1.2
+PKG_BUILDDATE ?= $(shell date +%y%m%d%H)
 
 all: moxa-ver-cfg
 
