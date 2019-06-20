@@ -17,26 +17,34 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-
 case "$1" in
-    configure)
-
+configure)
 	if [ -f /sbin/expand2fs.bak ]; then
 		mv /sbin/expand2fs /sbin/expand2fs.bak
 	fi
 	rm -f /etc/systemd/system/multi-user.target.wants/uc5100_init.service
 
+	if ! systemctl is-enabled moxa-cellular-utils.service >/dev/null; then
+		systemctl enable moxa-cellular-utils.service
+	fi
+	if ! systemctl is-enabled moxa-cellular-signald.service >/dev/null; then
+		systemctl enable moxa-cellular-signald.service
+	fi
+	if ! systemctl is-enabled moxa-wifi-signald.service >/dev/null; then
+		systemctl enable moxa-wifi-signald.service
+	fi
+
 	echo "*** System successfully updated. ***"
 	echo "*** Please reboot the system...***"
-    ;;
+	;;
 
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
+abort-upgrade|abort-remove|abort-deconfigure)
+	;;
 
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
+*)
+	echo "postinst called with unknown argument \`$1'" >&2
+	exit 1
+	;;
 esac
 
 # dh_installdeb will replace this with shell code automatically
