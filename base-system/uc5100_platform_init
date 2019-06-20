@@ -124,13 +124,6 @@ initial_tpm2() {
         fi
 }
 
-initial_cellular() {
-	if dmesg | grep -E "idProduct=68c0|idProduct=15c1|idProduct=005b" > /dev/null; then
-		systemctl start moxa-cellular-signald.service
-		systemctl start moxa-cellular-utils.service
-        fi
-}
-
 uc5100_initial() {
 	local model_name=$(get_model_name)
 
@@ -142,18 +135,6 @@ uc5100_initial() {
 		one_time_setting ${model_name}
 		rfs_resize
 	fi
-
-	# initial by model
-	case ${model_name} in
-	UC-5101-LX|UC-5111-LX)
-		;;
-	UC-5102-LX|UC-5112-LX)
-		initial_cellular
-		;;
-	*)
-		echo "Error: Unknown model name" >&2
-		;;
-	esac
 
 	# general initial
 	initial_dio
