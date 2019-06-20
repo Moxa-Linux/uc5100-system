@@ -117,16 +117,13 @@ initial_dio() {
 }
 
 initial_tpm2() {
-        local tpm2=$(fw_printenv -n tpm2)
+	local tpm2="$(fw_printenv -n tpm2 2>/dev/null)"
 
-        # check tpm2 is exist or not.
-        if [ X"${tpm2}" == X"1" ]; then
+	if [ "${tpm2}" == "1" ]; then
 		export TPM2TOOLS_TCTI_NAME=device
 		export TPM2TOOLS_DEVICE_FILE=/dev/tpmrm0
-
-		# load tpm2 drivers and service
-                modprobe tpm_tis_spi
-        fi
+		modprobe tpm_tis_spi
+	fi
 }
 
 uc5100_initial() {
