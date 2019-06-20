@@ -81,6 +81,11 @@ one_time_setting() {
 		systemctl disable moxa-cellular-utils.service
 		systemctl disable moxa-wifi-signald.service
 		;;
+	UC-5112-LX|UC-5102-LX)
+		systemctl enable moxa-cellular-signald.service
+		systemctl enable moxa-cellular-utils.service
+		systemctl enable moxa-wifi-signald.service
+		;;
 	esac
 
 	# fix the issue that mount storage fuse-related filesystem via udev might be failed
