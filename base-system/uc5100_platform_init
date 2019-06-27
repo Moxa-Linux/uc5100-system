@@ -141,6 +141,7 @@ uc5100_initial() {
 	# general initial
 	initial_dio
 	initial_tpm2
+	modprobe cryptodev
 
 	# light up system ready led
 	mx-led-ctl -p 1 -i 1 on
