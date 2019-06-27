@@ -1,3 +1,9 @@
+uc5100-system (1.2.1) stretch; urgency=medium
+
+  * feat: probe crypto device
+
+ -- Ken CJ Chou <KenCJ.Chou@moxa.com>  Thu, 27 Jun 2019 11:35:54 +0800
+
 uc5100-system (1.2.0) stretch; urgency=low
 
   * Remove SD card, USB storage auto-mount feature
