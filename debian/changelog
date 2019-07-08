@@ -1,3 +1,10 @@
+uc5100-system (1.2.2) stretch; urgency=medium
+
+  * fix: update moxa-dio-control to 1.2.0+deb9
+  * fix: update moxa-firmware-tools to 1.1.2+deb9
+
+ -- Ken CJ Chou <KenCJ.Chou@moxa.com>  Mon, 8 Jul 2019 18:32:43 +0800
+
 uc5100-system (1.2.1) stretch; urgency=medium
 
   * feat: probe crypto device
