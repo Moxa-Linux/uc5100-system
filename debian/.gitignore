@@ -1,0 +1,11 @@
+# common
+*.debhelper.log
+*.substvars
+*.postinst.debhelper
+*.postrm.debhelper
+files
+debhelper-build-stamp
+
+# package tmp dir
+uc5100-base-system/
+uc5100-moxa-configs/
