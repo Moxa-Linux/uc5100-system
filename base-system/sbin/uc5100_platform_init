@@ -1,11 +1,11 @@
 #!/bin/bash
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (C) 2018 MOXA Inc. - https://www.moxa.com/
 #
 # Authors:
 #       2018    Elvis Yao <ElvisCW.Yao@moxa.com>
 #       2018    Ken CJ Chou <KenCJ.Chou@moxa.com>
-#
 
 rfs_resize() {
 	expand2fs
