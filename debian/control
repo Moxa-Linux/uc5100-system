@@ -1,7 +1,7 @@
 Source: uc5100-system
 Section: admin
 Priority: required
-Maintainer: Elvis Yao <ElvisCW.Yao@moxa.com>
+Maintainer: Ken CJ Chou <KenCJ.Chou@moxa.com>
 Build-Depends: debhelper (>= 10)
 Standards-Version: 4.1.2
 Homepage: http://www.moxa.com/
