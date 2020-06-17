@@ -9,7 +9,6 @@ Homepage: http://www.moxa.com/
 Package: uc5100-base-system
 Architecture: any
 Depends: ${misc:Depends},
-         uc5100-moxa-configs (= ${binary:Version}),
          uc5100-kernel (>= 4.4.154+2.1.0),
          uc5100-modules-std (>= 4.4.154+2.1.0),
          sparklan-qca9377-driver-4.4.0-cip-am335x (>= 4.4.154+2.1.0),
@@ -27,13 +26,7 @@ Depends: ${misc:Depends},
          moxa-nport-real-tty-utils,
          u-boot-tools,
          tpm2-tools
+Conflicts: uc5100-moxa-configs
+Replaces: uc5100-moxa-configs
 Description: Base system for UC-5100
  It contains the necessary tools for setting up UC-5100
-
-Package: uc5100-moxa-configs
-Architecture: any
-Depends: ${misc:Depends}
-Description: UC-5100 platform configuration file
- The platform-related configuration items are recoreded in this file,
- these items will be referred to other platform packages
-
