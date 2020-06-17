@@ -1,0 +1,1 @@
+DEVPATH=="/bus/i2c/drivers/rtc-ds1374", RUN+="/sbin/modprobe ds1374_wdt"

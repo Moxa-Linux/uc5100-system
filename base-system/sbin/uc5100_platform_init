@@ -1,56 +1,37 @@
 #!/bin/bash
 #
 # SPDX-License-Identifier: Apache-2.0
+# Copyright (C) 2018 MOXA Inc. - https://www.moxa.com/
 #
 # Authors:
 #       2018    Elvis Yao <ElvisCW.Yao@moxa.com>
 #       2018    Ken CJ Chou <KenCJ.Chou@moxa.com>
-#
 
-rfs_resize () {
+rfs_resize() {
 	expand2fs
 	mv /sbin/expand2fs /sbin/expand2fs.bak
 	sync
 	/sbin/reboot -d -f -i
 }
 
-init_gpio () {
+init_gpio() {
 	local gpio=${1}
 	local direction=${2}
 	local value=${3}
 
 	if [ ! -e "/sys/class/gpio/gpio${gpio}" ]; then
-		echo ${gpio} > "/sys/class/gpio/export"
-		echo ${direction} > "/sys/class/gpio/gpio${gpio}/direction"
+		echo "${gpio}" > /sys/class/gpio/export
 	fi
-	if [ X"${direction}" == X"out" ]; then
-		echo ${value} > "/sys/class/gpio/gpio${gpio}/value"
+
+	if [ "${direction}" = "in" ]; then
+		echo "in" > /sys/class/gpio/gpio${gpio}/direction
+	elif [ "${direction}" = "out" ]; then
+		if [ "${value}" = "0" ]; then
+			echo "low" > /sys/class/gpio/gpio${gpio}/direction
+		elif [ "${value}" = "1" ]; then
+			echo "high" > /sys/class/gpio/gpio${gpio}/direction
+		fi
 	fi
-}
-
-init_network_config() {
-	local num_of_eth="${1}"
-
-	echo "# interfaces(5) file used by ifup(8) and ifdown(8)"
-	echo "# Include files from /etc/network/interfaces.d:"
-	echo "source-directory /etc/network/interfaces.d"
-	echo -n "auto"
-
-	for (( i=0 ; i<${num_of_eth}; i++ ))
-	do
-		echo -n " eth${i}"
-	done
-	echo " lo"
-	echo "iface lo inet loopback"
-
-	for (( i=0 ; i<${num_of_eth}; i++ ))
-	do
-		echo "iface eth${i} inet static"
-		echo "        address 192.168.$((${i} + 3)).127"
-		echo "        network 192.168.$((${i} + 3)).0"
-		echo "        netmask 255.255.255.0"
-		echo "        broadcast 192.168.$((${i} + 3)).255"
-	done
 }
 
 get_model_name() {
@@ -72,39 +53,6 @@ get_model_name() {
 	esac
 }
 
-one_time_setting() {
-	local model_name=${1}
-
-	case ${model_name} in
-	UC-5111-LX|UC-5101-LX)
-		systemctl disable moxa-cellular-signald.service
-		systemctl disable moxa-cellular-utils.service
-		systemctl disable moxa-wifi-signald.service
-		;;
-	UC-5112-LX|UC-5102-LX)
-		systemctl enable moxa-cellular-signald.service
-		systemctl enable moxa-cellular-utils.service
-		systemctl enable moxa-wifi-signald.service
-		;;
-	esac
-
-	# fix the issue that mount storage fuse-related filesystem via udev might be failed
-	cp -a /lib/systemd/system/systemd-udevd.service /etc/systemd/system/
-	sed -i 's/MountFlags=slave/MountFlags=shared/' /etc/systemd/system/systemd-udevd.service
-
-	depmod -a
-
-	# Enable bootloader to pass the fsck.repair parameter to kernel
-	fw_setenv robust 1
-
-	init_network_config 2 > /etc/network/interfaces
-
-	# fix kernel 4.4 swap memory issue.
-	if ! grep "vm.min_free_kbytes" /etc/sysctl.conf > /dev/null; then
-                echo "vm.min_free_kbytes=65536" >> /etc/sysctl.conf
-        fi
-}
-
 initial_dio() {
 	init_gpio "54" "out" "0"
 	init_gpio "55" "out" "0"
@@ -119,7 +67,7 @@ initial_dio() {
 initial_tpm2() {
 	local tpm2="$(fw_printenv -n tpm2 2>/dev/null)"
 
-	if [ "${tpm2}" == "1" ]; then
+	if [ "${tpm2}" = "1" ]; then
 		export TPM2TOOLS_TCTI_NAME=device
 		export TPM2TOOLS_DEVICE_FILE=/dev/tpmrm0
 		modprobe tpm_tis_spi
@@ -133,15 +81,15 @@ uc5100_initial() {
 	ln -sf /etc/moxa-configs/${model_name}/udev/* /etc/udev/rules.d/
 
 	# only needs to initial one time
-	if [ -f /sbin/expand2fs ]; then	
-		one_time_setting ${model_name}
+	if [ -f /sbin/expand2fs ]; then
+		# Enable bootloader to pass the fsck.repair parameter to kernel
+		fw_setenv robust 1
 		rfs_resize
 	fi
 
 	# general initial
 	initial_dio
 	initial_tpm2
-	modprobe cryptodev
 
 	# light up system ready led
 	mx-led-ctl -p 1 -i 1 on
@@ -202,4 +150,4 @@ stop)
 	exit 3
 	;;
 esac
-
+exit 0
