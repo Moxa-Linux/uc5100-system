@@ -17,21 +17,31 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-case "$1" in
-configure)
+move_expand2fs_if_already_expanded() {
 	if [ -f /sbin/expand2fs.bak ]; then
 		mv /sbin/expand2fs /sbin/expand2fs.bak
 	fi
+}
+
+disable_services() {
+	if systemctl is-enabled -q moxa-cellular-utils.service; then
+		systemctl disable moxa-cellular-utils.service
+	fi
+	if systemctl is-enabled -q moxa-cellular-signald.service; then
+		systemctl disable moxa-cellular-signald.service
+	fi
+	if systemctl is-enabled -q moxa-wifi-signald.service; then
+		systemctl disable moxa-wifi-signald.service
+	fi
+}
+
+case "$1" in
+configure)
+	move_expand2fs_if_already_expanded
 	rm -f /etc/systemd/system/multi-user.target.wants/uc5100_init.service
 
-	if ! systemctl is-enabled moxa-cellular-utils.service >/dev/null; then
-		systemctl enable moxa-cellular-utils.service
-	fi
-	if ! systemctl is-enabled moxa-cellular-signald.service >/dev/null; then
-		systemctl enable moxa-cellular-signald.service
-	fi
-	if ! systemctl is-enabled moxa-wifi-signald.service >/dev/null; then
-		systemctl enable moxa-wifi-signald.service
+	if dpkg --compare-versions ${2} lt 1.3.0; then
+		disable_services
 	fi
 
 	echo "*** System successfully updated. ***"

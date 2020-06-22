@@ -1,7 +1,7 @@
 Source: uc5100-system
 Section: admin
 Priority: required
-Maintainer: Elvis Yao <ElvisCW.Yao@moxa.com>
+Maintainer: Ken CJ Chou <KenCJ.Chou@moxa.com>
 Build-Depends: debhelper (>= 10)
 Standards-Version: 4.1.2
 Homepage: http://www.moxa.com/
@@ -9,31 +9,39 @@ Homepage: http://www.moxa.com/
 Package: uc5100-base-system
 Architecture: any
 Depends: ${misc:Depends},
-         uc5100-moxa-configs (= ${binary:Version}),
-         uc5100-kernel (>= 4.4.154+2.1.0),
-         uc5100-modules-std (>= 4.4.154+2.1.0),
-         sparklan-qca9377-driver-4.4.0-cip-am335x (>= 4.4.154+2.1.0),
+         uc5100-kernel (>= 4.4.190+1.1.4),
+         uc5100-modules-std (>= 4.4.190+1.1.4),
+         linux-headers-4.4.0-cip-rt-am335x (>= 4.4.190+1.1.4),
+         linux-kbuild-4.4.0-cip-rt-am335x (>= 4.4.190+1.1.4),
+         sparklan-qca9377-driver-4.4.0-cip-am335x (>= 4.4.190+1.1.4),
+         jjplus-rtl8822bu-driver-4.4.0-cip-rt-am335x (>= 1.0.0-moxa4),
+         mxp-common-udev-rules (>= 1.0.0),
          moxa-version (>= 1.0.0),
-         moxa-led-control (>= 1.1.0),
-         moxa-push-button (>= 1.1.2),
-         moxa-uart-control (>= 1.1.3),
-         moxa-dio-control (>= 1.2.0),
-         moxa-module-control (>= 1.3.1),
+         libmoxa-gpio-control1 (>= 1.0.3+deb9),
+         libmoxa-gpio-control-dev (>= 1.0.3+deb9),
+         libmoxa-led-control1 (>= 1.1.1+deb9),
+         libmoxa-led-control-dev (>= 1.1.1+deb9),
+         moxa-led-control (>= 1.1.1+deb9),
+         libmoxa-push-button1 (>= 1.1.3+deb9),
+         libmoxa-push-button-dev (>= 1.1.3+deb9),
+         moxa-push-button (>= 1.1.3+deb9),
+         libmoxa-uart-control1 (>= 1.1.4+deb9),
+         libmoxa-uart-control-dev (>= 1.1.4+deb9),
+         moxa-uart-control (>= 1.1.4+deb9),
+         libmoxa-dio-control1 (>= 1.2.0+deb9),
+         libmoxa-dio-control-dev (>= 1.2.0+deb9),
+         moxa-dio-control (>= 1.2.0+deb9),
+         moxa-module-control (>= 1.4.0),
+         moxa-cellular-utils (>= 2.2.0),
+         moxa-cellular-signald (>= 2.2.0),
+         moxa-wifi-utils (>= 1.8.1),
+         moxa-wifi-signald (>= 1.8.1),
          moxa-firmware-tools (>= 1.1.2),
-         moxa-cellular-utils (>= 1.52.9),
-         moxa-wifi-utils (>= 1.6.5),
-         moxa-cellular-signald (>= 1.52.9),
-         moxa-wifi-signald (>= 1.6.5),
          moxa-nport-real-tty-utils,
-         u-boot-tools,
-         tpm2-tools
+         tpm2-tools (>= 3.1.3-2),
+         bluez (>= 5.43-2),
+         u-boot-tools (>= 2016.11+dfsg1-4)
+Conflicts: uc5100-moxa-configs
+Replaces: uc5100-moxa-configs
 Description: Base system for UC-5100
  It contains the necessary tools for setting up UC-5100
-
-Package: uc5100-moxa-configs
-Architecture: any
-Depends: ${misc:Depends}
-Description: UC-5100 platform configuration file
- The platform-related configuration items are recoreded in this file,
- these items will be referred to other platform packages
-
