@@ -1,3 +1,9 @@
+uc5100-system (1.3.1) stretch; urgency=medium
+
+  * Update dependencies
+
+ -- Ken CJ Chou <KenCJ.Chou@moxa.com>  Mon, 17 Aug 2020 14:54:39 +0800
+
 uc5100-system (1.3.0) stretch; urgency=medium
 
   * Refine platform init script
